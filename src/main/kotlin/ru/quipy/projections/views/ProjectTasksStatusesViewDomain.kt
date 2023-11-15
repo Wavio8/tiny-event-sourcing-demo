@@ -21,11 +21,23 @@ class ProjectTasksStatusesViewDomain {
             val statusId: UUID
     ) : Unique<UUID>
 
-    data class Task(
+    data class ProjectUser(
             @Id
             override val id: UUID,
-            var name: String,
-            var statusId: UUID?,
-            var userId: UUID?,
+            val userId: UUID,
+            val projectId: UUID
     ) : Unique<UUID>
+
+    data class TaskStatus(
+            @Id
+            override val id: UUID,
+            val taskId: UUID,
+            val statusId: UUID
+    ) : Unique<UUID>
+
+    data class Status(
+            val id: UUID = UUID.randomUUID(),
+            val name: String,
+            val color: String
+    )
 }
