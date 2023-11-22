@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.quipy.api.*
+import ru.quipy.projections.views.ProjectViewDomain
 import ru.quipy.projections.views.UserViewDomain
 import ru.quipy.streams.AggregateSubscriptionsManager
 import java.util.*
@@ -46,7 +47,7 @@ class ProjectEventsSubscriber {
         }
     }
     private fun createProject(userId: UUID, userName: String) {
-        val user = UserViewDomain.User(userId, userName)
+        val proj = ProjectViewDomain.Project(userId, userName)
         //Repository.save(user)
     }
     private fun createUser(userId: UUID, userName: String) {

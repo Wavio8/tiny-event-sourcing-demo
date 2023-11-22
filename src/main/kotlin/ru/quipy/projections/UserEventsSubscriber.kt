@@ -5,13 +5,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.quipy.api.*
+import ru.quipy.projections.repo.UserRepository
 import ru.quipy.projections.views.UserViewDomain
 import ru.quipy.streams.AggregateSubscriptionsManager
 import java.util.*
 import javax.annotation.PostConstruct
 
 @Service
-class UserEventsSubscriber {
+class UserEventsSubscriber (
+        private val userRepository: UserRepository,
+){
     val logger: Logger = LoggerFactory.getLogger(ProjectEventsSubscriber::class.java)
 
     @Autowired
@@ -36,11 +39,11 @@ class UserEventsSubscriber {
 
     private fun createUser(userId: UUID, userName: String) {
         val user = UserViewDomain.User(userId, userName)
-        //Repository.save(user)
+        userRepository.save(user)
     }
 
     private fun changeUserName(userId: UUID, userName: String) {
         val user = UserViewDomain.User(userId, userName)
-        //Repository.update(user)
+        userRepository.save(user)
     }
 }
