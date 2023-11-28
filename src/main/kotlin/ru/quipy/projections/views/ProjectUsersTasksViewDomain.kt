@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import ru.quipy.domain.Unique
 import java.util.*
-
+// не нужен
 class ProjectUsersTasksViewDomain {
     @Document("project-users-tasks-view")
     data class Project(

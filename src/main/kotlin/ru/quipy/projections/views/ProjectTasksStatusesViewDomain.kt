@@ -17,7 +17,7 @@ class ProjectTasksStatusesViewDomain {
     data class ProjectStatus(
             @Id
             override val id: UUID,
-            val taskId: UUID,
+//            val taskId: UUID,
             val statusId: UUID
     ) : Unique<UUID>
 
