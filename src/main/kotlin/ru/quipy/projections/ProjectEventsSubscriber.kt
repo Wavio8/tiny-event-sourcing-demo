@@ -83,7 +83,7 @@ class ProjectEventsSubscriber (
         val proj = ProjectViewDomain.Project(id, title,creatorId)
         projRepository.save(proj)
         pURepositoryProject.save(proj as ProjectUsersViewDomain.Project)
-        pURepositoryProjectUser.save(ProjectUsersViewDomain.ProjectUser(,creatorId,id))
+        pURepositoryProjectUser.save(ProjectUsersViewDomain.ProjectUser(id=UUID.randomUUID(),UUID.fromString(creatorId),id))
 
     }
     private fun createTag(projectId: UUID, tagId: UUID,tagName: String,color: String) {
@@ -94,27 +94,29 @@ class ProjectEventsSubscriber (
     }
     private fun createTask(projectId: UUID,taskId: UUID,taskName: String) {
         val tasksCreated = ProjectTasksViewDomain.Task(taskId, taskName,null,null)
-        projRepository.save(proj)
-        projUserRepository.save(proj)
+        val id =UUID.randomUUID();
+        pTRepositoryTask.save(tasksCreated)
+        pTRepositoryProjectTask.save(ProjectTasksViewDomain.ProjectTask(id,taskId,projectId ))
+        pTSRepositoryProjectTask.save(ProjectTasksStatusesViewDomain.ProjectTask(id,taskId,projectId))
 
     }
     private fun tagAssignedToTask(projectId: UUID,taskId: UUID,tagId: UUID) {
-        val proj = ProjectViewDomain.Project(id, title,creatorId)
-        projRepository.save(proj)
-        projUserRepository.save(proj)
+        val tagsAssigned = ProjectTasksStatusesViewDomain.TaskStatus(id=UUID.randomUUID(), taskId,tagId)
+        pTSRepositoryTaskStatus.save(tagsAssigned)
 
     }
     private fun userAddedToProject(projectId: UUID,userId: UUID) {
-        val proj = ProjectViewDomain.Project(id, title,creatorId)
-        projRepository.save(proj)
-        projUserRepository.save(proj)
+        val id=UUID.randomUUID()
+        val userAdded = ProjectUsersViewDomain.ProjectUser(id, userId,projectId)
+        pURepositoryProjectUser.save(userAdded)
+        pTRepositoryProjectUser.save(ProjectTasksViewDomain.ProjectUser(id,userId,projectId))
+        pTSRepositoryProjectUser.save(ProjectTasksStatusesViewDomain.ProjectUser(id,userId,projectId))
 
     }
     private fun projectNameChanged(projectId: UUID,title: String) {
-        val proj = ProjectViewDomain.Project(id, title,creatorId)
-        projRepository.save(proj)
-        projUserRepository.save(proj)
-
+        val proj = projRepository.findById(projectId)
+        proj.get().projectTitle=title
+        pURepositoryProject.findById(projectId).get().projectTitle=title
     }
     private fun tagDeleted(projectId: UUID,tagId: UUID) {
         val proj = ProjectViewDomain.Project(id, title,creatorId)
@@ -123,7 +125,9 @@ class ProjectEventsSubscriber (
 
     }
     private fun userAssignedToTask(projectId: UUID,userId: UUID,taskId: UUID) {
-        val proj = ProjectViewDomain.Project(id, title,creatorId)
+        val proj = projRepository.findById(projectId)
+        proj.
+        ProjectViewDomain.Project(id, title,creatorId)
         projRepository.save(proj)
         projUserRepository.save(proj)
 

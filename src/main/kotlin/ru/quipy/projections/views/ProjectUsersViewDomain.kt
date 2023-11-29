@@ -1,5 +1,6 @@
 package ru.quipy.projections.views
 
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import ru.quipy.domain.Unique
@@ -9,10 +10,10 @@ import java.util.*
 class ProjectUsersViewDomain {
     @Document("project-users-view")
     data class ProjectUser(
-            @Id
-            override val id: UUID,
-            val userId: UUID,
-            val projectId: UUID
+        @Id
+        override val id: UUID,
+        val userId: UUID,
+        val projectId: UUID
     ) : Unique<UUID>
 
     data class User(
