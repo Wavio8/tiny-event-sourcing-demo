@@ -10,7 +10,7 @@ interface PTSRepositoryProjectTask : MongoRepository<ProjectTasksStatusesViewDom
 
 }
 interface PTSRepositoryProjectStatus : MongoRepository<ProjectTasksStatusesViewDomain.ProjectStatus?, UUID?> {
-    fun findByFirstName(firstName: String?): UserViewDomain?
+    fun deleteByProjectId(projectId: UUID): ProjectTasksStatusesViewDomain.ProjectStatus?
     fun findByLastName(lastName: String?): List<UserViewDomain?>?
     //    fun save(id: UUID,username: String)
     fun getById(id: UUID):UserViewDomain?
