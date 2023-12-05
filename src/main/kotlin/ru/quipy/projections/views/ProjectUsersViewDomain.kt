@@ -26,6 +26,6 @@ class ProjectUsersViewDomain {
             @Id
             override val id: UUID,
             var projectTitle: String,
-            var creatorId: String,
+            var creatorId: UUID,
     ) : Unique<UUID>
 }

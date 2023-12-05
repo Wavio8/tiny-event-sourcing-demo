@@ -1,5 +1,6 @@
 package ru.quipy.controller
 
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,12 +14,19 @@ import ru.quipy.logic.addTask
 import ru.quipy.logic.create
 import ru.quipy.logic.createTag
 import ru.quipy.logic.*
+import ru.quipy.projections.views.ProjectTasksStatusesViewDomain
+import ru.quipy.projections.views.ProjectTasksViewDomain
+import ru.quipy.projections.views.ProjectUsersViewDomain
+import ru.quipy.service.ProjectService
+import ru.quipy.service.UserService
 import java.util.*
 
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
-        val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>
+        val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>,
+        val userService: UserService,
+        val projectService: ProjectService,
 ) {
 
     @PostMapping("/{projectTitle}")
@@ -85,5 +93,63 @@ class ProjectController(
         return projectEsService.update(projectId) {
             it.changeTaskName(userId, taskId, title)
         }
+    }
+
+    @GetMapping("/checkUsername")
+    fun checkUsername(@RequestParam username: String): ResponseEntity<Boolean> {
+        val isUsernameExists = userService.isUsernameExists(username)
+        return ResponseEntity.ok(isUsernameExists)
+    }
+
+    @GetMapping("{userId}/projects")
+    fun getProjectsByUserId(@PathVariable userId: UUID): ResponseEntity<List<ProjectUsersViewDomain.Project>> {
+        val projects = projectService.getProjectsByUserId(userId)
+        return ResponseEntity.ok(projects)
+    }
+
+    @GetMapping("/users/{projectId}")
+    fun getUsersByProjectId(@PathVariable projectId: UUID): ResponseEntity<List<ProjectUsersViewDomain.User>> {
+        val users = projectService.getUsersByProjectId(projectId)
+        return ResponseEntity.ok(users)
+    }
+
+    @GetMapping("/creator/{projectId}")
+    fun getCreatorByUserIdAndProjectId(
+            @PathVariable projectId: UUID
+    ): ResponseEntity<ProjectUsersViewDomain.User?> {
+        val creator = projectService.getCreatorProjectId(projectId)
+        return ResponseEntity.ok(creator)
+    }
+
+    @GetMapping("/project-title/{projectId}")
+    fun getProjectTitleByUserIdAndProjectId(
+            @PathVariable projectId: UUID
+    ): ResponseEntity<String?> {
+        val projectTitle = projectService.getProjectTitleByProjectId(projectId)
+        return ResponseEntity.ok(projectTitle)
+    }
+
+    @GetMapping("/{statusId}/tasks")
+    fun getTasksByStatusId(
+            @PathVariable statusId: UUID
+    ): ResponseEntity<List<UUID?>> {
+        val projectTitle = projectService.getTasksByStatusId(statusId)
+        return ResponseEntity.ok(projectTitle)
+    }
+
+    @GetMapping("/{projectId}/statuses")
+    fun getStatusesByProjectId(
+            @PathVariable projectId: UUID
+    ): ResponseEntity<List<ProjectTasksStatusesViewDomain.Status>> {
+        val projectTitle = projectService.getStatusesByProjectId(projectId)
+        return ResponseEntity.ok(projectTitle)
+    }
+
+    @GetMapping("/{projectId}/statuses")
+    fun getTaksByProjectId(
+            @PathVariable projectId: UUID
+    ): ResponseEntity<List<ProjectTasksViewDomain.Task>> {
+        val projectTitle = projectService.getTasksByProjectId(projectId)
+        return ResponseEntity.ok(projectTitle)
     }
 }
